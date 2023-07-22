@@ -1,0 +1,52 @@
+﻿<UserControl x:Class="MidiPadMacros.UI.WindowResources.UserControls.MidiPadCircularButton"
+             x:Name="Root"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="200" d:DesignWidth="200">
+    
+    <Grid Margin="2">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="30" />
+        </Grid.RowDefinitions>
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+        
+        <Grid>
+            <Ellipse
+                Stroke="#000000"
+                StrokeThickness="2"
+                Fill="#888888" />
+            
+            <Ellipse
+                Stroke="#000000"
+                StrokeThickness="6"
+                Fill="#111111" 
+                Margin="20"/>
+            
+            <DockPanel VerticalAlignment="Center">
+                <StackPanel>
+                    <Button Content="Set Button" Width="65" Height="20" Margin="2" Background="#222222" Foreground="#EEEEEE"/>
+                    <Button Content="Set Macro" Width="65" Height="20" Margin="2" Background="#222222" Foreground="#EEEEEE"/>
+                </StackPanel>
+            </DockPanel>
+        </Grid>
+        
+        <DockPanel Grid.Row="1">
+            <DockPanel  DockPanel.Dock="Top">
+                <TextBlock Text="{Binding MacroText, ElementName=Root}" DockPanel.Dock="Right" />
+                <TextBlock Text="Macro:" DockPanel.Dock="Left" />
+            </DockPanel>
+            
+            <DockPanel DockPanel.Dock="Bottom">
+                <TextBlock Text="{Binding ButtonIdText, ElementName=Root}" DockPanel.Dock="Right" />
+                <TextBlock Text="Pad Button ID:" DockPanel.Dock="Left" />
+            </DockPanel>
+        </DockPanel>
+    </Grid>
+</UserControl>

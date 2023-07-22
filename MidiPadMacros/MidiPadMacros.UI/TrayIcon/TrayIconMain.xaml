@@ -41,7 +41,11 @@
                 <tb:TaskbarIcon.ContextMenu>
                     <ContextMenu Background="#222222" >
                         
-                        <MenuItem Header="Open MidiPadMacros Main Window" Command="{Binding OpenMainWindowCommand}" />
+                        <MenuItem Header="Macro Pad Button Settings" Command="{Binding OpenFourByFourButtonSettingsWindowCommand}" />
+                        
+                        <MenuItem Header="Current Device:" />
+                        
+                        <MenuItem Header="Midi Fighter Spectra" IsCheckable="True" IsChecked="True" Command="{Binding DeviceSelectionMidiFighterSpectra}" />
                         
                         <Separator />
                         

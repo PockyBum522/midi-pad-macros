@@ -11,6 +11,7 @@ using Serilog;
 using MidiPadMacros.Core;
 using MidiPadMacros.Core.Logic.WindowsHelpers;
 using MidiPadMacros.UI.Interfaces;
+using MidiPadMacros.UI.WindowResources.FourByFourButtonSettingsWindow;
 using MidiPadMacros.UI.WindowResources.MainWindow;
 using MidiPadMacros.UI.WindowResources.SettingsWindow;
 using WindowsInput;
@@ -67,10 +68,16 @@ public partial class TrayIconViewModel : ObservableObject, ITrayIconViewModel
 
         LogAllMidiDevices();
 
+        var buttonSetWindow = new FourByFourButtonSettingsWindow();
+        buttonSetWindow.Show();
+
+#pragma warning disable CS4014
+        // Change this to a real scheduler at some point so we don't have to just loop forever
         SetupMidiFighterEvents();
+#pragma warning restore CS4014
     }
     
-    private static IInputDevice _inputDevice;
+    private static IInputDevice? _inputDevice;
 
     private void LogAllMidiDevices()
     {
@@ -87,7 +94,7 @@ public partial class TrayIconViewModel : ObservableObject, ITrayIconViewModel
         _inputDevice = InputDevice.GetByName("Midi Fighter Spectra");
         _inputDevice.EventReceived += OnEventReceived;
         _inputDevice.StartEventsListening();
-        
+
         Console.WriteLine("Input device is listening for events. Press any key to exit...");
 
         while (true)
@@ -95,15 +102,28 @@ public partial class TrayIconViewModel : ObservableObject, ITrayIconViewModel
             await Task.Delay(1000);
         }
         
-        (_inputDevice as IDisposable)?.Dispose();
+        // This isn't necessary as we'll (At least for now) be running this until the program closes, so no disposal needed
+        // If we add device enable/disable support, change this
+        //(_inputDevice as IDisposable)?.Dispose();
+
+        // ReSharper disable once FunctionNeverReturns but we should make this an actual scheduler at some point
     }
 
+    /// <summary>
+    /// Device name to match when watching for MIDI events coming in
+    /// </summary>
+    public static string DeviceName { get; set; } = "";
     
-    public static string DeviceName { get; set; }
-
-    private void OnEventReceived(object sender, MidiEventReceivedEventArgs e)
+    /// <summary>
+    /// Tray icon menu checkbox for "Device Selection > Midi Fighter Spectra"
+    /// </summary>
+    public bool DeviceSelectionMidiFighterSpectra { get; set;  }
+    
+    private void OnEventReceived(object? sender, MidiEventReceivedEventArgs e)
     {
-        var midiDevice = (MidiDevice)sender;
+        var midiDevice = (MidiDevice?)sender;
+
+        if (midiDevice is null) throw new NullReferenceException("Midi device was null");
         
         _logger.Information("Event received from '{DeviceName}' at {TimeStamp}: {EventId}", midiDevice.Name, DateTime.Now, e.Event);
 
@@ -176,6 +196,12 @@ public partial class TrayIconViewModel : ObservableObject, ITrayIconViewModel
                 
                 break;
         }
+    }
+
+    [RelayCommand]
+    private void OpenFourByFourButtonSettingsWindow()
+    {
+        
     }
     
     /// <summary>
